@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Objetivo 3 : Viales </title>
+		
+
+    </head>
+    <body>
+	 <script>
+	 //variables tc3
+	 let lc ;
+	 let rc ;
+	 let lt;
+	 let s ;
+	 let a1 ;
+	 let carril ;
+	 let cala ;
+	 let c ;
+	 //variables button
+	 let b1 = document.getElementById("b1");
+	 let b2 = document.getElementById("b2");
+	 let b3 = document.getElementById("b3");
+	 
+	 function introDatos(){
+             lc = parseFloat(prompt("Introduzca la Longitud de la curva circular(lc)"));
+			 rc = parseFloat(prompt("Introduzca la Longitud del Radio(rc)"));
+			 lt = parseFloat(prompt("Introduzca la Longitud de la Curva de Transicion(lt)"));
+		     s = parseFloat(prompt("Introduzca el Ancho de la Via (S) 1500 usualmente"));
+             a1 = parseFloat(prompt("Introduzca la longitud de la junta al TS (A1)"));
+			 carril = parseFloat(prompt("Introduzca la longitud del carril (12.50 o 25 )"));
+			 cala =parseFloat(prompt("Introduzca la longitud de la cala (usualmente es 0.01 m"));
+      
+	   }
+	 
+			
+			
+			function primerasEcuaciones (){
+			c = lt * rc ;
+			let xcc = (s*lc)/rc ;
+			alert("El valor de Xcc es "+xcc);
+			alert("El valor de C es "+c);
+			let xct = (s* ((lt*lt)))/(2*c);
+			alert("El valor de Xct es: "+xct);
+			let xt = xcc + (2 * xct);
+			alert("El valor de XT es : "+xt);
+			}
+			
+			function calcularAcortamientos (){
+			c = lt * rc ;
+			
+			let carrilC = cala + carril ;
+			let a2 = carrilC-a1;
+			alert("Es valor de A2 es: "+a2);
+			
+			let cts = (lt - a2) / carrilC
+			cts = parseInt(cts);
+			alert("En la primera curva de transicion(A2-C1) hay "+cts+" carriles");
+			
+			
+			//calcular los acortamientos del ts
+			let contador = 1 ;
+			const acTS=new Array(cts+1);
+			
+			acTS[0]=(s * ((a2*a2)))/(2*c);
+			acTS[0]=parseFloat(acTS[0].toFixed(2));
+
+			alert("El valor de X1 es "+ acTS[0]);
+			
+
+			for ( let i = 0; i < cts; i++) {
+				
+
+				acTS[contador] =(s * (((contador*carrilC+a2)*(contador*carrilC+a2))))/(2*c);
+				acTS[contador] = parseFloat(acTS[contador].toFixed(2));
+
+				alert("El valor de X"+(contador+1)+" es "+acTS[contador]);
+
+				contador++;
+			}
+			//calculo de b1
+			let b1 = lt - ((contador-1) * carrilC + a2);
+			b1= parseFloat(b1.toFixed(2));
+			alert ("El Valor de b1 es "+ b1+" m");
+			let b2 = carrilC - b1;
+			b2=parseFloat(b2.toFixed(2));
+			alert ("La longitud de b2 es "+b2+" m");
+			let cscont = contador-1;
+			let a2b1 = a2 + b1;
+			
+			let xSC = (s * (((cscont * carrilC + (a2b1))*( cscont * carrilC + (a2b1)))))/(2*c);
+            alert("El Valor de Xsc es de "+ xSC);
+			
+			//calculo de la curva circular
+			
+			//Calculos para el Circular
+			let cCC = (lc-b2)/carrilC ;
+			let ccc = parseInt(cCC);
+			alert("Del c1 al d1 hay "+ccc+" carriles");
+			const aCC = new Array(ccc);
+
+			contador++;
+			
+			aCC [0] = xSC + ((s * b2) / rc);
+            alert ("El valor de X"+(contador)+"es de "+aCC[0]);
+			let conT = 1;
+			
+			for (let i = 0; i < (ccc-1) ; i++) {
+
+
+				aCC[conT] = aCC[conT-1] + ((s * carrilC) /rc);
+				//conversion y redondeo a 2 cifras
+				aCC[conT]=parseFloat(aCC[conT].toFixed(2));
+
+				alert("El valor de X"+(contador+1)+" es "+aCC[conT]);
+
+				contador++;
+				conT++;
+			}
+
+
+			
+			
+			
+			
+			}
+			
+			function hacerclic(){
+			
+			document.getElementsByTagName('button')[0].onclick=introDatos;
+						document.getElementsByTagName('button')[1].onclick=primerasEcuaciones;
+								document.getElementsByTagName('button')[2].onclick=calcularAcortamientos;
+									
+			}
+			window.onload=hacerclic;
+			
+			//touchpadd
+			b1.addEventListener("touchstart",function(event){
+			introDatos();
+			});
+			b2.addEventListener("touchstart",function(event){
+			primerasEcuaciones ();
+			});
+			b3.addEventListener("touchstart",function(event){
+			calcularAcortamientos ();
+			});
+			
+			
+			
+			
+			
+			
+			
+	</script>
+        <h1>Objetivo #3 Viales</h1>
+		<div>
+		<p>Este programa calcula los valores mas escenciales de la prueba que son los acortamientos y la longitud de los carriles ,inserte los datos en orden
+		y ejecute posteriormente siguendo los pasos</p>
+		<button  id="b1">          1) HAGA CLIC PARA INSERTAR LOS DATOS </button>
+		<button  id="b2">          2) HAGA CLIC PARA VER LOS RESULTADOS DE LAS PRIMERAS ECUACIONES</button>
+		<button  id="b3">         3) HAGA CLIC PARA  VER LA LONGITUD DE LOS CARRILES Y LOS ACORTAMIENTOS</button>
+		
+		</div>
+        <section>
+	
+        <article>
+     *****
+	 
+		
+			
+	</article>		
+	</section>
+
+	<footer>
+	All Right Reserved 2024. "Marcos Romero"
+	Version 1.0_Android
+        </footer>
+    </body>
+</html>
