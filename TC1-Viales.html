@@ -1,0 +1,516 @@
+<!DOCTYPE html >
+<html >
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Objetivo 1_Viales</title>
+		
+
+
+
+<script>
+
+// get id 
+ let b1 = document.getElementById("b1");
+	 let b2 = document.getElementById("b2");
+
+
+
+//aqui empieza el codigo del cbr .....................................................................................
+function calcularElCBR (){
+//calculo de CBR 
+//introducir numeros
+let cbr = [] ;
+
+let cantidadNum =parseInt(prompt("Introduzca en numero de muestras de CBR "));
+
+alert("A continuacion introduzca sucesivamente las muestras, una en cada mensaje , el siguiente mensaje se repetira "+cantidadNum+" veces");
+for (let c = 0 ; c < cantidadNum ; c++){
+
+let n = parseFloat(prompt("Introduzca un valor"));
+cbr.push(n);
+
+}
+
+ //objeto de almacenamiento.
+let datos ={
+  numeros : [],
+  cantidad : [],
+  c:[]
+}
+
+let cantidadN= cbr.length; 
+
+let ik ;
+let cant ;
+
+datos.numeros.push(cbr[0]);
+
+for( let i = 0 ; i < (cantidadN) ; i++ ){
+
+//si el numero no esta en el array lo agrega.
+if(i===0 || detectar(cbr[i])===false){
+ 
+  //si no es el 0 agrega el componente.esto lo hace bien
+  if(i!== 0){
+  
+    datos.numeros.push(cbr[i]);
+   }
+
+ }
+
+}
+
+ik = datos.numeros.length;
+il = datos.cantidad.length;
+
+let cont = 0 ;
+for(ik ; 0 < ik ; ik--){
+cant = 0 ;
+for(let a = 0 ; a < cantidadN ; a++){
+
+if(datos.numeros[cont]===cbr[a]){
+cant ++;
+
+  }
+
+ }
+cont++;
+datos.cantidad.push(cant);
+}
+
+// esta funcion detecta si el numero indicado esta ya en el array.
+function detectar(nc){
+let iterar = datos.numeros.length;
+let existe = false ;
+for(let ii = 0;ii<iterar;ii++){
+if(nc===datos.numeros[ii]){
+existe = true ;
+  }
+ }
+return existe ;
+}
+
+//funcion de calcular cbr
+
+function calcularCBR (){
+
+for (let k = 0 ; k < datos.numeros.length ; k++){
+
+datos.c.push( datos.numeros[k]*datos.cantidad[k]);
+}
+
+let sumaArray = sumarArray(datos.c);
+
+let xmedia = sumaArray/cbr.length;
+xmedia=parseFloat(xmedia.toFixed(2));
+
+alert("El valor de xmedia es "+xmedia);
+
+//calculo de S
+
+  let s = calcularS(datos.cantidad,datos.numeros,xmedia);
+  s= parseFloat(s.toFixed(2));
+  let cbrvalue = xmedia - s ;
+  cbrvalue = parseFloat(cbrvalue.toFixed(2));
+
+  alert("El valor del CBR es : "+cbrvalue);
+  
+  
+  //poner el calculo de subsarante.
+  if(cbrvalue >= 5 && cbrvalue < 10 ){
+  alert("La subrasante en Aceptable");
+  
+  }else if (cbrvalue >= 10 && cbrvalue < 15){
+  alert("La subrasante es Media");
+  }else if (cbrvalue >= 15){
+  
+  alert("La subrasante es Buena ");
+  }
+  
+  
+
+}
+
+//funcion sumar array.
+function sumarArray (arr){
+  let n = arr.length;
+  let s = 0;
+  for(let a = 0 ; a < n ; a++){
+    s=s+arr[a];
+  }
+ return s ;
+}
+
+function calcularS (arr1,arr2,xmedia){
+
+let ss = 0 ;
+  for(x=0; x < datos.numeros.length ; x ++){
+    ss = ss + ( arr1[x]*  Math.pow((arr2[x]-xmedia),2) )
+  }
+  
+  ss=ss/(cbr.length-1);
+  ss =Math.sqrt(ss);
+  ss = parseFloat(ss.toFixed(2));
+
+  alert("El valor de S es :"+ss);
+    return ss ;
+
+}
+
+calcularCBR();
+
+}
+
+//Aqui termina el calculo de CBR .
+
+
+
+function calculoICD0(){
+
+
+//datos comunes .
+//preguntar la variante .
+let variante = parseInt(prompt("Introduzca un numero para elegir la variante a calcular 1_Dos Carriles ; 2_Cuatro Carriles")) ;
+let iCD ;
+let tpd ;
+let k=1;
+let pvp;
+let pcd ;
+
+if(variante === 1 ){
+calcularV1();
+}else if (variante === 2){
+    calcularV2();
+}else if(variante===3) {
+}
+
+//variante 1 ********************
+function calcularV1 (){
+//pedir datos para tpd
+tpd =parseFloat(prompt("Introduzca el valor de trafico promedio diario TPD"));
+//alertar el valor de datos
+pcd = 100 ;
+
+//pedir datos para pvp ;
+let vlc1 = parseInt(prompt("Introduzca el numero de vehiculos ligeros en el carril 1"));
+let vpc1 = parseInt(prompt("Introduzca el numero de vehiculos pesados en el carril 1"));
+let vlc2 = parseInt(prompt("Introduzca el numero de vehiculos ligeros en el carril 2"));
+let vpc2 = parseInt(prompt("Introduzca el numero de vehiculos pesados en el carril 2"));
+
+let vpt = vpc1+vpc2 ;
+let vlt = vlc1 + vlc2 ;
+let tvh = vpt + vlt ;
+
+pvp = vpt /(tvh)*100;
+//alertar el valor de pvp
+
+
+//el valor de K
+let con = confirm("La K es balanceada? ");
+if(con){
+    k=0.5 ;
+}else {
+    k= (vpc1+vlc1)/tvh;
+    let kt = 1-k ;
+    if(k<kt){
+        k=kt;
+    }
+
+
+}
+pvp=parseFloat(pvp.toFixed(2));
+k=parseFloat(k.toFixed(2));
+
+alert("El valor de pvp es : "+pvp);
+alert("este es el valor de k "+k);
+
+iCD = tpd * (pvp/100)*(pcd/100)*k;
+iCD=parseFloat(iCD.toFixed(2));
+
+
+//alert
+alert("Valor de ICD   "+iCD);
+alert("este valor de icd es el que se sustituye en la ecuacion de SumatoriaNm");
+}
+
+//variante 2 *******************************
+
+function calcularV2(){
+//pedir tpd
+let code = "default";
+tpd = parseFloat(prompt("Introduzca el valor del trafico promedio diario TPD"));
+let  carriles = [[0,0,"x"],[0,0,"x"],[0,0,"x"],[0,0,"x"]] ;
+
+
+// este for es para llenar los arrays de los carriles.
+for(let i = 0 ; i < 4 ; i++){
+    num = i+1;
+
+    carriles[i][0]=parseFloat(prompt("Introduzca el numero de vehiculos ligeros en el carril "+num));
+   carriles[i][1]=parseFloat(prompt("Introduzca el numero de vehiculos pesados en el carril "+num));
+   carriles[i][2]=confirmacion(num);
+
+}
+
+// metodo que devuelve un string a la tercera posicion del array.
+function confirmacion (cont){
+let c = confirm(`El sentido de circulacion del carril ${cont} es la derecha ?`);
+let devuelve ="X";
+if(c){
+devuelve = "D" ;
+
+}else {
+    devuelve = "I" ;
+}
+return devuelve ;
+
+}
+
+//calculo de pvp ;
+
+let tVp = carriles[0][1]+carriles[1][1]+carriles[2][1]+carriles[3][1];
+
+let tVl = carriles[0][0]+carriles[1][0]+carriles[2][0]+carriles[3][0];
+
+let tVh = tVp + tVl ;
+
+pvp = tVp/(tVh)*100;
+pvp = parseFloat(pvp.toFixed(2));
+alert("El valor de pvp es de "+pvp);
+
+//calculo de pcd
+
+//esta funcion devuelve un codigo string segun su direccion
+function codeDirecction (){
+
+let codep = "default";
+            if (carriles[0][2]=== carriles[1][2] && carriles[2][2] === carriles[3][2]) {
+
+				codep = "12_34";
+		    }
+			if (carriles[0][2]===carriles[2][2] && carriles[1][2] === carriles[3][2]) {
+
+				codep = "13_24";
+			}
+			if (carriles[0][2] === carriles[3][2] && carriles[1][2]=== carriles[2][2]) {
+
+				codep = "14_23";
+			}
+
+			return codep;
+			}
+			code = codeDirecction();
+		
+	//	alert("code "+code
+	
+		//calculo pcd esta funcion calcula pcd segun el codigo devuelto por la funcion anterior 
+function calculoPCD4 (n1 ,n2 ,n3 , n4 ,code ){
+		
+		let pcdvalue = 0 ;
+		
+		//12 34
+			if (code === "12_34" ) {
+
+				let pcd1 = n1/(n1+n2);
+
+				let pcd2 = n2/(n1+n2);
+
+				let pcd3 = n3/(n3+n4);
+
+			    let  pcd4 = n4/(n3+n4);
+
+				//ESCRIBE VALORES EN CONSOLA
+				pcdvalue = compara4Numeros (pcd1,pcd2,pcd3,pcd4);
+				alert("El valor de PCD1 = "+pcd1);
+				alert("El valor de PCD2 = "+pcd2);
+				alert("El valor de PCD3 = "+pcd3);
+				alert("El valor de PCD4 = "+pcd4);
+				alert("El mayor de todos y por tanto el valor a usar es :"+ pcdvalue);
+
+
+				return pcdvalue *100;
+				}
+				
+				// 13 24 
+
+			if (code === "13_24") {
+
+				let pcd1 = n1/(n1+n3);
+
+				let pcd2 = n3/(n1+n3);
+
+				let pcd3 = n2/(n2+n4);
+
+				let pcd4 = n4/(n2+n4);
+
+
+				//ESCRIBE VALORES EN CONSOLA
+				pcdvalue = compara4Numeros (pcd1,pcd2,pcd3,pcd4);
+				alert("El valor de PCD1 = "+pcd1);
+				alert("El valor de PCD2 = "+pcd2);
+				alert("El valor de PCD3 = "+pcd3);
+				alert("El valor de PCD4 = "+pcd4);
+				alert("El mayor de todos y por tanto el valor a usar es :"+ pcdvalue);
+
+				return pcdvalue*100;
+     }
+	 
+	 if (code==="14_23") {
+
+				let pcd1 = n1 / (n1 + n4);
+
+				let pcd2 = n4 / (n1 + n4);
+
+				let pcd3 = n2 / (n2 + n3);
+
+				let pcd4 = n3 / (n2 + n3);
+
+
+				//ESCRIBE VALORES EN CONSOLA
+				pcdvalue = compara4Numeros (pcd1,pcd2,pcd3,pcd4);
+				alert("El valor de PCD1 = "+pcd1);
+				alert("El valor de PCD2 = "+pcd2);
+				alert("El valor de PCD3 = "+pcd3);
+				alert("El valor de PCD4 = "+pcd4);
+				alert("El mayor de todos y por tanto el valor a usar es :"+ pcdvalue);
+				
+
+				return pcdvalue*100;
+				}
+				
+		
+// esta funcion compara 4 numeros
+function compara4Numeros ( n1 , n2 , n3 , n4 ){
+			let nMayor = 0;
+
+			if (n1 > n2 && n1 > n3 && n1 > n4) {
+
+				nMayor = n1;
+			}
+			if (n2 > n1 && n2 > n3 && n2 > n4) {
+
+				nMayor = n2;
+			}
+			if (n3 > n1 && n3 > n2 && n3 > n4) {
+
+				nMayor = n3;
+			}
+			if (n4 > n1 && n4 > n2 && n4 > n3) {
+
+				nMayor = n4;
+			}
+
+			return nMayor;
+		}
+		
+		
+		
+		}
+		
+pcd = calculoPCD4(carriles[0][1],carriles[1][1],carriles[2][1],carriles[3][1],code);
+pcd= parseFloat(pcd.toFixed(2));
+
+
+alert("Este es el PCD redondeado a 2 cifras "+pcd);
+
+
+//calculo de K 
+function calcularK (){
+
+
+if (code==="12_34"){
+
+k = (carriles[0][0]+carriles[1][0]+carriles[0][1]+carriles[1][1])/tVh ;
+if(1-k>k){
+k=1-k;
+}
+}
+
+if(code==="13_24"){
+k = (carriles[0][0]+carriles[2][0]+carriles[0][1]+carriles[2][1])/tVh ;
+if(1-k>k){
+k=1-k ;
+}
+}
+
+if(code==="14_23"){
+k = (carriles[0][0]+carriles[3][0]+carriles[0][1]+carriles[3][1])/tVh ;
+if(1-k>k){
+k=1-k;
+}
+}
+
+//aqui mismo calculo iCD0
+
+k=parseFloat(k.toFixed(2));
+
+alert("el valor de la K es "+k);
+
+iCD = tpd * (pvp/100)*(pcd/100)*k;
+iCD=parseFloat(iCD.toFixed(2));
+
+alert("El valor de icd es "+iCD);
+alert("Este valor de ICD0 lo usaremos para sustituir en la sumatoriaNm");
+
+}
+
+calcularK();
+
+		}
+		
+
+//aqui ejecuta 
+}
+
+
+
+
+
+// funciones de llamado para los botones al hacer clic
+
+function hacerclic(){
+			
+			document.getElementsByTagName('button')[0].onclick=calcularElCBR;
+			document.getElementsByTagName('button')[1].onclick=calculoICD0;
+									
+			}
+			window.onload=hacerclic;
+			
+			//funciones de tactil
+			
+			b1.addEventListener("touchstart",function(event){
+			calcularElCBR();
+			});
+			b2.addEventListener("touchstart",function(event){
+			calculoICD0();
+			});
+			
+			
+			
+			
+			
+			
+			
+
+
+</script>
+</head>
+<body>
+<h1>Objetivo #1 Viales</h1>
+<div>
+<p>Este programa calcula los siguientes datos CBR , ICD0  </p>
+<button id="b1" >Calcular CBR</button>
+<button  id="b2">Calcular ICD0</button>
+<p>Dejamos la tabla y el calculo de SumatoriaNm al usuario : SumatoriaNm=365*ICD0*Kr*fce</p>
+<p>Este ha sido un proyecto patrocinado por criollosDelaCarpetera.sa</p>
+
+</div>
+
+
+
+
+
+<footer>Todos los derechos reservados "Marcos Romero"</footer>
+</body>
+</html>
