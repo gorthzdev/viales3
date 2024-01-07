@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viales 3</title>
+  <script>
+
+function calcular(){
+    //variables del formulario.
+    
+    let lc = parseFloat(document.getElementById("lc").value);
+     
+	 let rc = parseFloat (document.getElementById("rc").value)
+     
+	 let lt = parseFloat (document.getElementById("lt").value)
+     
+	 let s  = parseFloat (document.getElementById("s").value )
+    
+	 let a1 = parseFloat (document.getElementById("a1").value )
+     
+	 let carril = parseFloat (document.getElementById("carril").value )
+     
+	 let cala =parseFloat (document.getElementById("cala").value )
+
+	 let c ;
+     // variables de texto
+     let tPE ="";
+     let tSE ="";
+     let rAC ="";
+    
+
+     //primeras ecuaciones
+     function primerasEcuaciones (){
+			c = lt * rc ;
+			let xcc = (s*lc)/rc ;
+            tPE = tPE + " " + " El valor de Xcc es "+xcc ;
+            tPE = tPE + " " + "; El valor de C es "+c ;
+		
+			let xct = (s* ((lt*lt)))/(2*c);
+            tPE = tPE + " " + "; El valor de Xct es: "+xct ;
+            
+			let xt = xcc + (2 * xct);
+            tPE = tPE + " " + "; El valor de XT es : "+xt + " .";
+			}
+            primerasEcuaciones();
+            document.getElementById("resultado1").innerHTML=tPE;
+
+//segundas ecuaciones .
+
+function calcularAcortamientos (){
+			c = lt * rc ;
+			
+			let carrilC = cala + carril ;
+			let a2 = carrilC-a1;
+            tSE = tSE + " " + "Es valor de A2 es: "+a2 + "  .";
+		
+			
+			let cts = (lt - a2) / carrilC
+			cts = parseInt(cts);
+            tSE = tSE + " " + "En la primera curva de transicion(A2-C1) hay "+cts+" carriles"+"  .";
+		
+			//calcular los acortamientos del ts
+			let contador = 1 ;
+			const acTS=new Array(cts+1);
+			
+			acTS[0]=(s * ((a2*a2)))/(2*c);
+			acTS[0]=parseFloat(acTS[0].toFixed(2));
+
+            rAC = rAC + "" + " X1 = "+ acTS[0]+ "  .";
+			
+			for ( let i = 0; i < cts; i++) {
+				
+
+				acTS[contador] =(s * (((contador*carrilC+a2)*(contador*carrilC+a2))))/(2*c);
+				acTS[contador] = parseFloat(acTS[contador].toFixed(2));
+
+                rAC = rAC + "" +" X"+(contador+1)+" = "+acTS[contador]+ "  .";
+
+				contador++;
+			}
+
+			//calculo de b1
+			let b1 = lt - ((contador-1) * carrilC + a2);
+			b1= parseFloat(b1.toFixed(2));
+
+            tSE = tSE + " " + "El Valor de b1 es "+ b1+" m"  +"  .";
+			let b2 = carrilC - b1;
+			b2=parseFloat(b2.toFixed(2));
+            tSE = tSE + " " + "El Valor de b2 es "+b2+" m" +"  .";
+
+			let cscont = contador-1;
+			let a2b1 = a2 + b1;
+			
+			let xSC = (s * (((cscont * carrilC + (a2b1))*( cscont * carrilC + (a2b1)))))/(2*c);
+
+            rAC = rAC +  " Xsc = "+ xSC + "  ."; 
+			
+			//Calculos para el Circular
+			let cCC = (lc-b2)/carrilC ;
+			let ccc = parseInt(cCC);
+
+            tSE = tSE + "Del b2 al c1 hay "+ccc+" carriles" + "  .";
+
+		
+			const aCC = new Array(ccc);
+
+			contador++;
+			
+			aCC [0] = xSC + ((s * b2) / rc);
+
+           
+           rAC = rAC + " X"+(contador)+"= "+aCC[0] + "  .";
+			let conT = 1;
+			
+			for (let i = 0; i < (ccc-1) ; i++) {
+
+
+				aCC[conT] = aCC[conT-1] + ((s * carrilC) /rc);
+				//conversion y redondeo a 2 cifras
+				aCC[conT]=parseFloat(aCC[conT].toFixed(2));
+
+                rAC = rAC + " X"+(contador+1)+" = "+aCC[conT] + "  .";
+
+				contador++;
+				conT++;
+			}
+
+			}
+
+ calcularAcortamientos();
+
+ document.getElementById("resultado2").innerHTML=tSE;
+ document.getElementById("resultado3").innerHTML=rAC;
+
+//aqui termina calcular .
+}
+function joke(){
+let random;
+let joke = "";
+function randNum(min,max){
+ let na = Math.random() * (max-min)+min;
+ na = Math.round(na);
+ return na ;
+}
+random = randNum(1,7);
+
+switch(random){
+case 1 : joke="El 0.1% de las cosas te salen  , animo  &#x1F921";
+break;
+case 2 : joke="Eres como la leche vana , estas vencid@ &#x1F42E ";
+break;
+case 3 : joke=" Pileta te va a meter preso &#x1F46E";
+break;
+case 4 : joke=" Un criollo porfa ";
+break;
+case 5 : joke=" Se fuerte , comiste chopo &#x1F437";
+break;
+case 6 : joke=" Los quiero chicos &#x1F60A";
+break;
+
+}
+
+document.getElementById("joke").innerHTML=joke;
+}
+
+  </script>
+
+</head>
+<body >
+    <header>
+        <h1>Viales 3</h1>
+        <p>Este programa esta diseñado paa resolver el primer trabajo de control de Viales de forma sencilla</p>
+    </header>
+    <nav>
+        <p> <a href="#formularios"><strong>Formularios</strong></a>   <br>  <a href="#botones"><strong>Calcular</strong>   </a></p>
+    </nav>
+    <section>
+        <p>A continuacion introduzca los datos requeridos en los campos para implementarlo en las ecuaciones.</p>
+        <form  id="formularios">
+            <fieldset>
+                <legend>Medidas de la Curva Espiral</legend>
+
+                <label for="lc">Longitud de la curva circular</label><br>
+                <input type="number" id="lc" nombre="lc" placeholder="lc" required step="any" autofocus><br>
+
+                <label for="rc">Radio de la curva</label><br>
+                <input type="number" id="rc" nombre="rc" placeholder="Rc" required step="any"><br>
+               
+                <label for="s">Ancho de la Via</label><br>
+                <input type="number" id="s" nombre="s" placeholder="S" required step="any"><br>
+           
+                <label for="lt">Longitud de la curva de transicion</label><br>
+                <input type="number" id="lt" nombre="lt" placeholder="lt" required step="any"><br>
+
+                <label for="a1">Longitud de A1</label><br>
+                <input type="number" id="a1" nombre="a1" placeholder="A1" required step="any"><br>
+
+                <label for="carril">Longitud del carril Standard</label><br>
+                <input type="number" id="carril" nombre="carril" placeholder="12.5 o 25" required step="any"><br>
+                
+                <label for="cala">Cala</label><br>
+                <input type="number" id="cala" nombre="cala" placeholder="Usualmente 0.01" required step="any"><br>
+
+            </fieldset>
+            <fieldset id="botones">
+                <legend>Botones</legend>
+            
+            <button id="b1" onclick="calcular()">Resolver</button>
+                <hr>
+                <input type="reset" value="Reiniciar Datos" style="color: rgb(233, 65, 65);"><br>
+
+
+            </fieldset>
+
+        </form>
+    </section>
+    <article>
+        <h4 id="resultados" style="color:rgb(40, 40, 129);">Resultados</h3>
+
+        <p id="resultado1"></p><br>
+        <p id="resultado2"></p><br>
+        <p id="resultado3"></p><br>
+      <button onclick="joke()" style="width: 150px; height: 50px; font-size: large;">Animame &#x1F600</button>
+      <br>
+      <p id="joke"></p>
+    <hr>
+
+    </article>
+    <aside></aside>
+    <footer>
+        <p><i>All Right Reserved : Marcos Romero 2024</i></p>
+    </footer>
+    
+</body>
+</html>
